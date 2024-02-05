@@ -19,6 +19,7 @@ VALIDATE(){
         echo -e " $2 ..$G success $N"
 }
 
+
 if [ ID -ne 0 ]
 then
     echo -e "$R Run the script with root user $N"
