@@ -21,7 +21,7 @@ VALIDATE(){
     fi
 }
 
-if [ ID -ne 0 ]
+if [ $ID -ne 0 ]
 then
     echo -e "$R Run the script with root user $N"
     exit 1
@@ -30,7 +30,7 @@ else
 fi
 
 cp mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE #manually we do in vim editor,in shell we create one file repo and copy there.
-VALIDATE $? "copied mongodb Repo"
+VALIDATE $? " $G copied mongodb Repo"
 
 yum list installed mongodb &>> $LOGFILE
 if [ $? -ne 0 ]
@@ -42,10 +42,10 @@ else
 fi
 
 systemctl enable mongod &>> $LOGFILE
-VALIDATE $? "enabled mongod"
+VALIDATE $? " $G enabled mongod"
 
 systemctl start mongod &>> $LOGFILE
-VALIDATE $? "mongod started"
+VALIDATE $? " $G mongod started"
 
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf &>> $LOGFILE
 VALIDATE $? "Remote access to mongodb"
@@ -53,5 +53,5 @@ VALIDATE $? "Remote access to mongodb"
 #STREAMLINE editor--> '-i'=permanent changes, '-e'=temporary changes
 
 systemctl restart mongod &>> $LOGFILE
-VALIDATE $? "restarted mongodb"
+VALIDATE $? " $G restarted mongodb"
 
