@@ -16,6 +16,10 @@ VALIDATE(){
     then
         echo -e "$2 .. $R installion failed $N"
         exit 1
+
+    elif [ $1 -ne 0 ]
+    then
+        echo -e " $2 .. $Y Skipping $N"
     else
         echo -e "$2 .. $G installation success $N"
     
