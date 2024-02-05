@@ -16,10 +16,6 @@ VALIDATE(){
     then
         echo -e "$2 .. $R installion failed $N"
         exit 1
-
-    elif [ $1 -ne 0 ]
-    then
-        echo -e " $2 .. $Y Skipping $N"
     else
         echo -e "$2 .. $G installation success $N"
     
@@ -40,6 +36,9 @@ VALIDATE $? " $G copied mongodb Repo $N"
 
 yum list installed mongodb &>> $LOGFILE
 VALIDATE $? "already installed skipping"
+
+dnf install mongodb-org -y &>> $LOGFILE
+VALIDATE $? " installing mongodb"
 
 
 systemctl enable mongod &>> $LOGFILE
