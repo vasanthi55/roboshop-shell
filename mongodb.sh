@@ -18,6 +18,8 @@ VALIDATE(){
         exit 1
     else    
         echo -e "$2 .. $G installation success $N"
+    else
+        echo -e "$2 .. $Y installed SKIPPING"
     fi
 }
 
@@ -32,14 +34,10 @@ fi
 cp mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE #manually we do in vim editor,in shell we create one file repo and copy there.
 VALIDATE $? " $G copied mongodb Repo $N"
 
+
 yum list installed mongodb &>> $LOGFILE
-if [ $? -ne 0 ]
-then
-     dnf install mongodb-org -y &>> $LOGFILE
-    VALIDATE $? "installing  mongodb"
-else
-    echo -e "mongodb already installed.. $Y SKIPPING"
-fi
+VALIDATE $? "already installed skipping"
+
 
 systemctl enable mongod &>> $LOGFILE
 VALIDATE $? " $G enabled mongod $N"
