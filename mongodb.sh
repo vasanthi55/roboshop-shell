@@ -29,21 +29,29 @@ else
     echo -e "$G proceed you are root user $N"
 fi
 
-cp mongo.repo /etc/yum.repos.d/mongo.repo #manually we do in vim editor,in shell we create one file repo and copy there.
+cp mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE #manually we do in vim editor,in shell we create one file repo and copy there.
 VALIDATE $? "copied mongodb Repo"
 
-yum list installed $mongodb 
+yum list installed mongodb &>> $LOGFILE
 if [ $? -ne 0 ]
 then
-     dnf install $mongodb-org -y
-    VALIDATE $? "installing  $mongodb"
+     dnf install mongodb-org -y &>> $LOGFILE
+    VALIDATE $? "installing  mongodb"
 else
-    echo -e "$mongodb already installed.. $Y SKIPPING"
+    echo -e "mongodb already installed.. $Y SKIPPING"
 fi
 
-systemctl enable mongod
+systemctl enable mongod &>> $LOGFILE
 VALIDATE $? "enabled mongod"
 
-systemctl start mongod
+systemctl start mongod &>> $LOGFILE
 VALIDATE $? "mongod started"
+
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf &>> $LOGFILE
+VALIDATE $? "Remote access to mongodb"
+#script cant open files to edit manually we use vim editor here we user SED editor
+#STREAMLINE editor--> '-i'=permanent changes, '-e'=temporary changes
+
+systemctl restart mongod &>> $LOGFILE
+VALIDATE $? "restarted mongodb"
 
