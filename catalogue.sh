@@ -41,19 +41,41 @@ VALIDATE $? "Installing Nodejs:18"
 useradd roboshop  &>> $LOGFILE
 VALIDATE $? "Creating roboshop user"
 
-mkdir /app
-VALIDATE $? "Creating app directory" &>> $LOGFILE
+mkdir /app &>> $LOGFILE
+VALIDATE $? "Creating app directory" 
 
-curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip
-VALIDATE $? "Downloading catalogue application" &>> $LOGFILE
+curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip &>> $LOGFILE
+VALIDATE $? "Downloading catalogue application" 
 
 cd /app 
-unzip /tmp/catalogue.zip
-VALIDATE $? "unzipping" &>> $LOGFILE
+unzip /tmp/catalogue.zip &>> $LOGFILE
+VALIDATE $? "unzipping" 
 
 cd /app
-npm install 
-VALIDATE $? "installing dependencies" &>> $LOGFILE
+npm install &>> $LOGFILE
+VALIDATE $? "installing dependencies" 
+
+#use absolute path becoz catalogue service path exists there check with pwd
+cp catalogue.service /home/centos/roboshop-shell/etc/systemd/system/catalogue.service &>> $LOGFILE
+VALIDATE $? "copied catalogue.service" 
+
+systemctl daemon-reload &>> $LOGFILE
+VALIDATE $? "reload" 
+
+systemctl enable catalogue &>> $LOGFILE
+VALIDATE $? "enable catalogue" 
+
+systemctl start catalogue &>> $LOGFILE
+VALIDATE $? "starting catalogue" 
+
+cp /home/centos/roboshop-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE
+VALIDATE $? "copied mongo repo" 
+
+dnf install mongodb-org-shell -y  &>> $LOGFILE
+VALIDATE $? "installing mongodb client"
+
+mongo --host mongodb.vasudevops.online </app/schema/catalogue.js &>> $LOGFILE
+VALIDATE $? "loading catalogue data" 
 
 
 
