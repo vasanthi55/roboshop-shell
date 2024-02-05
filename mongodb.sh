@@ -32,6 +32,8 @@ fi
 cp mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE #manually we do in vim editor,in shell we create one file repo and copy there.
 VALIDATE $? " $G copied mongodb Repo $N"
 
+for mongodb
+do
 yum list installed mongodb &>> $LOGFILE
 if [ $? -ne 0 ]
 then
@@ -40,6 +42,7 @@ then
 else
     echo -e "mongodb already installed.. $Y SKIPPING"
 fi
+done
 
 systemctl enable mongod &>> $LOGFILE
 VALIDATE $? " $G enabled mongod $N"
