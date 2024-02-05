@@ -34,9 +34,6 @@ cp mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE #manually we do in vim ed
 VALIDATE $? " $G copied mongodb Repo $N"
 
 
-yum list installed mongodb &>> $LOGFILE
-VALIDATE $? "already installed skipping"
-
 dnf install mongodb-org -y &>> $LOGFILE
 VALIDATE $? " installing mongodb"
 
