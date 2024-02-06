@@ -82,4 +82,4 @@ mysql -h mysql.vasudevops.online -uroot -pRoboShop@1 < /app/schema/shipping.sql 
 VALIDATE $? "loading shippingdata" 
 
 systemctl restart shipping
-
+VALIDATE $? "restarted shipping"
