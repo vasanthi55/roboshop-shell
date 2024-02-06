@@ -9,12 +9,12 @@ Y="\e[33m"
 TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
 
-
+echo "Script started exucuting at $TIMESTAMP" &>> $LOGFILE
 VALIDATE(){
     if [ $1 -ne 0 ]
     then
         echo -e "$2 .. $R failed $N"
-        
+        exit 1
     else
         echo -e "$2 .. $G success $N"
     
@@ -38,17 +38,24 @@ VALIDATE $? "Enabling  NodeJs"
 dnf install nodejs -y &>> $LOGFILE
 VALIDATE $? "Installing Nodejs:18"
 
-useradd roboshop  &>> $LOGFILE
+id roboshop
+if [ $? -ne 0 ]
+then 
+    useradd roboshop  
 VALIDATE $? "Creating roboshop user"
+else
+    echo -e "roboshop user already exists..$Y SKIPPING $N"
+fi
 
-mkdir /app &>> $LOGFILE
+mkdir -p /app &>> $LOGFILE #-p it doesnt show error if no directory it creates if already exists it doesnt create
 VALIDATE $? "Creating app directory" 
 
 curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip &>> $LOGFILE
 VALIDATE $? "Downloading catalogue application" 
 
 cd /app 
-unzip /tmp/catalogue.zip &>> $LOGFILE
+
+unzip -o /tmp/catalogue.zip &>> $LOGFILE # "-o" overwrite
 VALIDATE $? "unzipping" 
 
 cd /app
