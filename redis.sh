@@ -9,6 +9,7 @@ Y="\e[33m"
 
 TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
+exec &>$LOGFILE # no need to give evrytime while validating if we give here it goes to logs error or success.
 
 echo "Script started exucuting at $TIMESTAMP" &>> $LOGFILE
 
