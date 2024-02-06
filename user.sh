@@ -1,4 +1,5 @@
-#!/bin/bash
+#!bin/bash
+
 ID=$(id -u)
 
 R="\e[31m"
@@ -50,31 +51,30 @@ fi
 mkdir -p /app &>> $LOGFILE #-p it doesnt show error if no directory it creates if already exists it doesnt create
 VALIDATE $? "Creating app directory" 
 
-curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip &>> $LOGFILE
-VALIDATE $? "Downloading catalogue application" 
+curl -o /tmp/user.zip https://roboshop-builds.s3.amazonaws.com/user.zip
+VALIDATE $? "Downloading user application" 
 
 cd /app 
 
-unzip -o /tmp/catalogue.zip &>> $LOGFILE # "-o" overwrite
-VALIDATE $? "unzipping" 
+unzip -o /tmp/user.zip &>> $LOGFILE # "-o" overwrite
+VALIDATE $? "unzipping user" 
 
 cd /app
+
 npm install &>> $LOGFILE
 VALIDATE $? "installing dependencies" 
 
-#use absolute path becoz catalogue service path exists there check with pwd
-#catalogue service is not in app directory need to give its absolute path
-cp  /home/centos/roboshop-shell/catalogue.service /etc/systemd/system/catalogue.service &>> $LOGFILE
-VALIDATE $? "copied catalogue.service" 
+cp  /home/centos/roboshop-shell/user.service /etc/systemd/system/user.service &>> $LOGFILE
+VALIDATE $? "copied user.service" 
 
 systemctl daemon-reload &>> $LOGFILE
-VALIDATE $? "user reload" 
+VALIDATE $? "reloading" 
 
-systemctl enable catalogue &>> $LOGFILE
-VALIDATE $? "enable catalogue" 
+systemctl enable user &>> $LOGFILE
+VALIDATE $? "enable user" 
 
-systemctl start catalogue &>> $LOGFILE
-VALIDATE $? "starting catalogue" 
+systemctl start user &>> $LOGFILE
+VALIDATE $? "starting user" 
 
 cp /home/centos/roboshop-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE
 VALIDATE $? "copied mongo repo" 
@@ -82,10 +82,8 @@ VALIDATE $? "copied mongo repo"
 dnf install mongodb-org-shell -y  &>> $LOGFILE
 VALIDATE $? "installing mongodb client"
 
-mongo --host mongodb.vasudevops.online </app/schema/catalogue.js &>> $LOGFILE
-VALIDATE $? "loading catalogue data" 
+mongo --host mongodb.vasudevops.online </app/schema/user.js &>> $LOGFILE
+VALIDATE $? "loading user data" 
 
-
-
-
+#can use variable instead of giving domain name everytime
 
