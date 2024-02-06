@@ -13,10 +13,10 @@ LOGFILE="/tmp/$0-$TIMESTAMP.log"
 VALIDATE(){
     if [ $1 -ne 0 ]
     then
-        echo -e "$2 .. $R installion failed $N"
+        echo -e "$2 .. $R failed $N"
         exit 1
     else
-        echo -e "$2 .. $G installation success $N"
+        echo -e "$2 .. $G success $N"
     
     fi
 }
@@ -56,7 +56,8 @@ npm install &>> $LOGFILE
 VALIDATE $? "installing dependencies" 
 
 #use absolute path becoz catalogue service path exists there check with pwd
-cp catalogue.service /home/centos/roboshop-shell/etc/systemd/system/catalogue.service &>> $LOGFILE
+#catalogue service is not in app directory need to give its absolute path
+cp  /home/centos/roboshop-shell/catalogue.service /etc/systemd/system/catalogue.service &>> $LOGFILE
 VALIDATE $? "copied catalogue.service" 
 
 systemctl daemon-reload &>> $LOGFILE
